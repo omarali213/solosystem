@@ -12,6 +12,12 @@
             ".write": "auth != null && auth.uid == $uid && ((!data.exists() && newData.child('uid').val() == auth.uid && (root.child('campaigns').child($campaignId).child('meta').child('ownerUid').val() == auth.uid || (newData.child('inviteCode').isString() && root.child('invites').child(newData.child('inviteCode').val()).child('campaignId').val() == $campaignId && root.child('invites').child(newData.child('inviteCode').val()).child('endsAt').val() > now))) || (data.exists() && newData.child('uid').val() == data.child('uid').val() && newData.child('points').val() == data.child('points').val() + 1 && newData.child('lastCheckInAt').val() > now - 86400000 && newData.child('lastCheckInAt').val() <= now && (!data.child('lastCheckInAt').exists() || data.child('lastCheckInAt').val() <= now - 86400000)))",
             ".validate": "newData.hasChildren(['uid', 'displayName', 'points']) && newData.child('uid').val() == $uid && newData.child('points').isNumber() && newData.child('displayName').isString()"
           }
+        },
+        "progress": {
+          "$uid": {
+            ".write": "auth != null && auth.uid == $uid && root.child('campaigns').child($campaignId).child('members').child($uid).exists() && now <= root.child('campaigns').child($campaignId).child('meta').child('endsAt').val() + 60000",
+            ".validate": "newData.child('updatedAt').isNumber()"
+          }
         }
       }
     },
