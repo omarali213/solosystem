@@ -1,6 +1,22 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInAnonymously, onAuthStateChanged, signOut, linkWithPopup } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
-import { getDatabase, ref, set, get, update, onValue, runTransaction, push } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-database.js";
+const FB_VERSIONS=["13.1.0","12.14.0"];
+async function loadFirebase(){
+  for(const v of FB_VERSIONS){
+    try{
+      const b=`https://www.gstatic.com/firebasejs/${v}/`;
+      const [a,au,d]=await Promise.all([import(b+"firebase-app.js"),import(b+"firebase-auth.js"),import(b+"firebase-database.js")]);
+      return {...a,...au,...d};
+    }catch(e){console.warn("Firebase "+v+" load failed",e);}
+  }
+  return null;
+}
+const FB=await loadFirebase();
+if(!FB){
+  const msg="تعذر تحميل مكتبات Firebase من الإنترنت. تأكد من الاتصال وأن gstatic.com غير محجوب، ثم أعد تحميل الصفحة.";
+  const show=()=>{const el=document.getElementById("authGateStatus");if(el)el.textContent=msg;};
+  show();document.addEventListener("DOMContentLoaded",show);
+  throw new Error(msg);
+}
+const { initializeApp, getAuth, GoogleAuthProvider, signInWithPopup, signInAnonymously, onAuthStateChanged, signOut, linkWithPopup, getDatabase, ref, set, get, update, onValue, runTransaction, push } = FB;
 
 const $ = id => document.getElementById(id);
 const CONFIG_KEY = "soloLevelingFirebaseConfig";
@@ -69,20 +85,23 @@ function randomCode(){const bytes=new Uint8Array(12);crypto.getRandomValues(byte
 async function createCampaign(event){
   event.preventDefault();if(!requireOnlineUser())return;
   const name=$("coopName").value.trim(),duration=durationInfo[$("coopDuration").value];if(!name||!duration)return;
+  const custom=($("coopCustomCode")?.value||"").trim().toUpperCase();
+  if(custom&&!/^[A-Z0-9]{6,20}$/.test(custom)){showStatus("الكود الخاص لازم يكون من 6 إلى 20 حرفًا إنجليزيًا أو رقمًا فقط.");return;}
   try{
-    const id=push(ref(db,"campaigns")).key,start=Date.now(),end=start+duration.ms,code=randomCode();
+    if(custom){const ex=(await get(ref(db,`invites/${custom}`))).val();if(ex&&ex.endsAt>Date.now()&&ex.ownerUid!==user.uid){showStatus("الكود ده مستخدم بالفعل. اختار كود تاني.");return;}}
+    const id=push(ref(db,"campaigns")).key,start=Date.now(),end=start+duration.ms,code=custom||randomCode();
     await set(ref(db,`campaigns/${id}/meta`),{name,ownerUid:user.uid,duration:$("coopDuration").value,durationLabel:duration.label,startsAt:start,endsAt:end,status:"active",createdAt:start});
     await set(ref(db,`campaigns/${id}/members/${user.uid}`),{uid:user.uid,displayName:user.displayName||"الصياد",isAnonymous:!!user.isAnonymous,points:0,checkIns:{},createdAt:start});
     await set(ref(db,`invites/${code}`),{campaignId:id,ownerUid:user.uid,campaignName:name,endsAt:end,createdAt:start});
     await set(ref(db,`userCampaigns/${user.uid}/${id}`),true);
     setCampaignIds([...campaignIds(),id]);const codes=savedCodes();codes[id]=code;localStorage.setItem(CODES_KEY,JSON.stringify(codes));
-    $("coopName").value="";showStatus("اتنشأت الحملة. ابعت كود الدعوة لصاحبك: "+code);await refreshCampaigns();
-  }catch(e){showStatus("تعذر إنشاء الحملة: "+(e.message||e));}
+    $("coopName").value="";if($("coopCustomCode"))$("coopCustomCode").value="";showStatus("اتنشأت الحملة. ابعت كود الدعوة لصاحبك: "+code);await refreshCampaigns();
+  }catch(e){showStatus("تعذر إنشاء الحملة: "+(/PERMISSION_DENIED/i.test(e.message||"")?"تأكد من نشر database.rules.json في Realtime Database، أو أن الكود غير مستخدم. ":"")+(e.message||e));}
 }
 
 async function joinCampaign(event){
   event.preventDefault();if(!requireOnlineUser())return;
-  const code=$("coopInviteCode").value.trim().toUpperCase();if(!/^[A-Z0-9]{12}$/.test(code)){showStatus("كود الدعوة لازم يكون 12 حرفًا ورقمًا.");return;}
+  const code=$("coopInviteCode").value.trim().toUpperCase();if(!/^[A-Z0-9]{6,20}$/.test(code)){showStatus("كود الدعوة لازم يكون من 6 إلى 20 حرفًا إنجليزيًا أو رقمًا.");return;}
   try{
     const inviteSnap=await get(ref(db,`invites/${code}`)),invite=inviteSnap.val();
     if(!invite||invite.endsAt<Date.now()){showStatus("الكود غير صحيح أو انتهت مدة الزنزانة.");return;}
@@ -131,7 +150,7 @@ async function copyInvite(id){const code=savedCodes()[id];if(!code)return;try{aw
 async function googleSignIn(){
   if(!auth){const message="تعذر تهيئة Firebase Auth. تحقق من إعداد Firebase Web Config.";if($("firebaseSetupStatus"))$("firebaseSetupStatus").textContent=message;if($("authGateStatus"))$("authGateStatus").textContent=message;return;}
   try{const provider=new GoogleAuthProvider();if(user?.isAnonymous)await linkWithPopup(user,provider);else await signInWithPopup(auth,provider);}
-  catch(e){const message="تعذر تسجيل الدخول: "+e.message;if($("firebaseSetupStatus"))$("firebaseSetupStatus").textContent=message;if($("authGateStatus"))$("authGateStatus").textContent=message;}
+  catch(e){const H={"auth/unauthorized-domain": "الدومين ده مش مضاف في Firebase: Authentication > Settings > Authorized domains (ضيف localhost أو دومين موقعك).", "auth/operation-not-allowed": "تسجيل Google مش مفعّل: Firebase Console > Authentication > Sign-in method > Google > Enable.", "auth/popup-blocked": "المتصفح منع النافذة المنبثقة. اسمح بالـ Popups للموقع وجرّب تاني.", "auth/popup-closed-by-user": "اتقفلت نافذة Google قبل ما تكمّل الدخول.", "auth/cancelled-popup-request": "اتقفلت نافذة Google قبل ما تكمّل الدخول.", "auth/network-request-failed": "مشكلة اتصال بالإنترنت.", "auth/internal-error": "خطأ داخلي من Firebase؛ غالبًا الصفحة مفتوحة من file:// أو الدومين مش مصرّح."};const hint=H[e.code]||(location.protocol==="file:"?"افتح الموقع عبر localhost أو HTTPS مش file://.":"");const message="تعذر تسجيل الدخول: "+(hint||e.message)+(e.code?" ("+e.code+")":"");console.error(e);if($("firebaseSetupStatus"))$("firebaseSetupStatus").textContent=message;if($("authGateStatus"))$("authGateStatus").textContent=message;}
 }
 async function cloudGuestSignIn(){if(!auth){const message="احفظ إعداد Firebase أولًا لاستخدام الضيف السحابي.";if($("authGateStatus"))$("authGateStatus").textContent=message;return;}try{if(!user?.isAnonymous)await signInAnonymously(auth);}catch(e){if($("authGateStatus"))$("authGateStatus").textContent="تعذر دخول الضيف: "+e.message;}}
 
@@ -147,3 +166,4 @@ function bindUI(){
 }
 bindUI();loadConfig();
 setInterval(()=>{if(user&&$("view-discipline-campaigns")?.classList.contains("active"))refreshCampaigns();},30000);
+window.__soloCloudLoaded=true;

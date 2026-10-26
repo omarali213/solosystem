@@ -17,8 +17,8 @@
     },
     "invites": {
       "$code": {
-        ".read": "auth != null && data.exists() && data.child('endsAt').val() > now",
-        ".write": "auth != null && newData.child('ownerUid').val() == auth.uid && root.child('campaigns').child(newData.child('campaignId').val()).child('meta').child('ownerUid').val() == auth.uid"
+        ".read": "auth != null && (!data.exists() || data.child('endsAt').val() > now)",
+        ".write": "auth != null && $code.matches(/^[A-Z0-9]{6,20}$/) && newData.child('ownerUid').val() == auth.uid && root.child('campaigns').child(newData.child('campaignId').val()).child('meta').child('ownerUid').val() == auth.uid && (!data.exists() || data.child('ownerUid').val() == auth.uid || data.child('endsAt').val() < now)"
       }
     },
     "userCampaigns": {
