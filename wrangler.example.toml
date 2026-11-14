@@ -1,0 +1,15 @@
+name = "solo-leveling-gemini-proxy"
+main = "worker/gemini-proxy.js"
+compatibility_date = "2026-11-13"
+
+# Replace 1001 with an integer namespace unique to your Cloudflare account.
+# Current suggested starter threshold: 30 requests per minute per IP and route.
+[[ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "1001"
+[ratelimits.simple]
+limit = 30
+period = 60
+
+# Add GEMINI_API_KEY as a Worker Secret and ALLOWED_ORIGINS as a Text variable
+# in the Cloudflare dashboard. Do not put secret values in this file.

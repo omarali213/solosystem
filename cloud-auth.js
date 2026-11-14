@@ -81,7 +81,10 @@ function saveConfig(inputId){
   catch(e){const message="إعداد غير صالح: "+e.message;if($("firebaseSetupStatus"))$("firebaseSetupStatus").textContent=message;if($("authGateStatus"))$("authGateStatus").textContent=message;}
 }
 function requireOnlineUser(){if(!user){showStatus("سجّل الدخول بحساب Google أو كضيف سحابي لاستخدام الحملات المشتركة.");return false;}if(!db){showStatus("تسجيل الدخول يعمل. لإعداد الحملات المشتركة أضف databaseURL من Firebase Realtime Database في الإعدادات.");return false;}return true;}
-function randomCode(){const bytes=new Uint8Array(12);crypto.getRandomValues(bytes);return Array.from(bytes,b=>(b%36).toString(36)).join("").toUpperCase();}
+function randomCode(){const bytes=new Uint8Array(12);crypto.getRandomValues(bytes);return Array.from(bytes,b=>(b%36).toString(36)).join("").toUpperCase();}async function auditCampaign(cid,action,detail=""){
+  if(!db||!user||!cid)return;
+  try{await set(push(ref(db,`campaigns/${cid}/events`)),{uid:user.uid,displayName:String(user.displayName||"الصياد").slice(0,60),action:String(action).slice(0,40),detail:String(detail).slice(0,140),at:Date.now()});}catch(e){console.warn("Campaign audit event could not be saved",e);}
+}
 
 async function createCampaign(event){
   event.preventDefault();if(!requireOnlineUser())return;
@@ -103,6 +106,7 @@ async function createCampaign(event){
     await set(ref(db,`campaigns/${id}/members/${user.uid}`),{uid:user.uid,displayName:user.displayName||"الصياد",isAnonymous:!!user.isAnonymous,points:0,checkIns:{},createdAt:start});
     await set(ref(db,`invites/${code}`),{campaignId:id,ownerUid:user.uid,campaignName:name,endsAt:end,createdAt:start});
     await set(ref(db,`userCampaigns/${user.uid}/${id}`),true);
+    await auditCampaign(id,"إنشاء الحملة",name);
     setCampaignIds([...campaignIds(),id]);const codes=savedCodes();codes[id]=code;localStorage.setItem(CODES_KEY,JSON.stringify(codes));
     ["coopName","coopCustomCode","coopSteps","coopPenalty","coopCustomValue"].forEach(k=>{if($(k))$(k).value="";});
     showStatus("اتنشأت الحملة. ابعت كود الدعوة لصاحبك: "+code);await refreshCampaigns();
@@ -119,6 +123,7 @@ async function joinCampaign(event){
     if(memberSnap.exists()){showStatus("أنت منضم لهذه الزنزانة بالفعل.");return;}
     const now=Date.now();await set(memberRef,{uid:user.uid,displayName:user.displayName||"الصياد",isAnonymous:!!user.isAnonymous,points:0,checkIns:{},inviteCode:code,createdAt:now});
     await set(ref(db,`userCampaigns/${user.uid}/${invite.campaignId}`),true);
+    await auditCampaign(invite.campaignId,"انضمام عضو",user.displayName||"الصياد");
     setCampaignIds([...campaignIds(),invite.campaignId]);const codes=savedCodes();codes[invite.campaignId]=code;localStorage.setItem(CODES_KEY,JSON.stringify(codes));
     $("coopInviteCode").value="";showStatus("انضممت للزنزانة: "+(invite.campaignName||"حملة الانضباط"));await refreshCampaigns();
   }catch(e){showStatus("تعذر الانضمام. تأكد من نشر database.rules.json: "+(e.message||e));}
@@ -127,7 +132,7 @@ async function joinCampaign(event){
 function campaignFromSnapshot(id,data){
   if(!data?.meta)return null;
   const steps=Object.entries(data.meta.steps||{}).sort((a,b)=>Number(a[0].slice(1))-Number(b[0].slice(1))).map(([sid,text])=>({id:sid,text:String(text)}));
-  return{id,...data.meta,steps,progress:data.progress||{},members:Object.values(data.members||{}).filter(Boolean).map(m=>({...m,id:m.uid}))};
+  return{id,...data.meta,steps,events:Object.values(data.events||{}).filter(Boolean).sort((a,b)=>(b.at||0)-(a.at||0)).slice(0,8),progress:data.progress||{},members:Object.values(data.members||{}).filter(Boolean).map(m=>({...m,id:m.uid}))};
 }
 function campaignOutcome(c){
   if(!c.steps?.length)return null;
@@ -149,17 +154,17 @@ function renderCampaigns(records){
     const my=c.progress?.[user?.uid]?.steps||{},n=c.steps.length;
     const tag=r?.outcome==="success"?'<span class="tag green">نجحت ✓</span>':r?.outcome==="fail"?'<span class="tag red">فشلت</span>':r?.outcome==="void"?'<span class="tag">انتهت بدون شريك</span>':`<span class="tag ${ended?"red":"green"}">${ended?"انتهت":"نشطة"}</span>`;
     const stepsHtml=n?`<div class="milestone-list">${c.steps.map(s=>`<label><input type="checkbox" data-coop-step="${esc(s.id)}" data-coop-campaign="${esc(c.id)}" ${my[s.id]?"checked":""} ${ended||!mine?"disabled":""}> ${esc(s.text)}</label>`).join("")}</div><small>⚠ العقوبة لو فشلت الحملة (على الطرفين): ${esc(c.penalty||"")}</small><small>🎁 مكافأة سرية: XP عالي + عنصر نادر مخفي</small>`:"";
-    return `<article class="stack-item coop-campaign"><div class="stack-main"><b>${esc(c.name)}</b><small>زنزانة ${esc(c.durationLabel)} · ⏳ ${esc(fmtLeft(c.endsAt-Date.now()))} · ${c.members.length} صيادين${c.members.length<2&&n?" (محتاج شريك عشان الحملة تتحسب)":""}</small><div class="coop-members">${c.members.map(m=>{const pm=c.progress?.[m.id]?.steps||{};const cnt=c.steps.filter(s=>pm[s.id]).length;return `<span class="tag">${esc(m.displayName||"ضيف")} · ${n?cnt+"/"+n+" خطوة":(Number(m.points)||0)+" نقطة"}</span>`;}).join("")}</div>${stepsHtml}</div><div class="button-stack"><button type="button" class="small-btn complete" data-coop-checkin="${esc(c.id)}" ${ended||!mine||checked?"disabled":""}>${checked?"أنجزت اليوم ✓":"سجّل إنجاز اليوم"}</button>${n?`<button type="button" class="small-btn delete" data-coop-fail="${esc(c.id)}" ${ended||!mine?"disabled":""}>سجّل فشل</button>`:""}${codes[c.id]?`<button type="button" class="small-btn" data-coop-copy="${esc(c.id)}">نسخ الدعوة</button>`:""}${tag}</div></article>`;}).join("");
+    return `<article class="stack-item coop-campaign"><div class="stack-main"><b>${esc(c.name)}</b><small>زنزانة ${esc(c.durationLabel)} · ⏳ ${esc(fmtLeft(c.endsAt-Date.now()))} · ${c.members.length} صيادين${c.members.length<2&&n?" (محتاج شريك عشان الحملة تتحسب)":""}</small><div class="coop-members">${c.members.map(m=>{const pm=c.progress?.[m.id]?.steps||{};const cnt=c.steps.filter(s=>pm[s.id]).length;return `<span class="tag">${esc(m.displayName||"ضيف")} · ${n?cnt+"/"+n+" خطوة":(Number(m.points)||0)+" نقطة"}</span>`;}).join("")}</div>${c.events?.length?`<details class="campaign-audit"><summary>سجل التغييرات (${c.events.length})</summary>${c.events.map(x=>`<small>${esc(x.displayName||"صياد")} · ${esc(x.action)} · ${esc(new Date(x.at||0).toLocaleString("ar-EG"))}</small>`).join("")}</details>`:""}${stepsHtml}</div><div class="button-stack"><button type="button" class="small-btn complete" data-coop-checkin="${esc(c.id)}" ${ended||!mine||checked?"disabled":""}>${checked?"أنجزت اليوم ✓":"سجّل إنجاز اليوم"}</button>${n?`<button type="button" class="small-btn delete" data-coop-fail="${esc(c.id)}" ${ended||!mine?"disabled":""}>سجّل فشل</button>`:""}${codes[c.id]?`<button type="button" class="small-btn" data-coop-copy="${esc(c.id)}">نسخ الدعوة</button>`:""}${tag}</div></article>`;}).join("");
 }
 async function setStep(cid,sid,on){
   if(!requireOnlineUser())return;
-  try{await update(ref(db,`campaigns/${cid}/progress/${user.uid}`),{["steps/"+sid]:on?true:null,updatedAt:Date.now()});}
+  try{await update(ref(db,`campaigns/${cid}/progress/${user.uid}`),{["steps/"+sid]:on?true:null,updatedAt:Date.now()});await auditCampaign(cid,on?"إكمال خطوة":"إلغاء خطوة",sid);}
   catch(e){showStatus("تعذر حفظ الخطوة: "+(/PERMISSION_DENIED/i.test(e.message||"")?"انشر آخر نسخة من database.rules.json أو الوقت انتهى. ":"")+(e.message||e));}
 }
 async function failCampaign(cid){
   if(!requireOnlineUser())return;
   if(!confirm("تسجيل الفشل هينزّل نفس العقوبة عليك وعلى شريكك فورًا. متأكد؟"))return;
-  try{await update(ref(db,`campaigns/${cid}/progress/${user.uid}`),{failedAt:Date.now(),updatedAt:Date.now()});}
+  try{await update(ref(db,`campaigns/${cid}/progress/${user.uid}`),{failedAt:Date.now(),updatedAt:Date.now()});await auditCampaign(cid,"تسجيل تعثر");}
   catch(e){showStatus("تعذر تسجيل الفشل: "+(e.message||e));}
 }
 
@@ -185,7 +190,7 @@ async function checkIn(id){
     current.points=(Number(current.points)||0)+1;current.checkIns=current.checkIns||{};current.checkIns[today]=true;current.lastCheckInAt=now;return current;
   });
   if(!result.committed){showStatus("سجّل إنجاز الحملة مرة واحدة كل 24 ساعة.");return;}
-  showStatus("تم تسجيل إنجازك اليوم في الحملة.");
+  await auditCampaign(id,"إنجاز يومي");showStatus("تم تسجيل إنجازك اليوم في الحملة.");
 }
 async function copyInvite(id){const code=savedCodes()[id];if(!code)return;try{await navigator.clipboard.writeText(code);showStatus("تم نسخ كود الدعوة: "+code);}catch{showStatus("كود الدعوة: "+code);}}
 async function googleSignIn(){
@@ -208,6 +213,9 @@ function bindUI(){
 document.addEventListener("change",e=>{const cb=e.target.closest?.("[data-coop-step]");if(cb)setStep(cb.dataset.coopCampaign,cb.dataset.coopStep,cb.checked);});
 document.addEventListener("click",e=>{const f=e.target.closest?.("[data-coop-fail]");if(f)failCampaign(f.dataset.coopFail);});
 setInterval(()=>{if(user&&Object.keys(campaignCache).length)renderCampaigns(Object.values(campaignCache));},20000);
-bindUI();loadConfig();
+window.SoloCloudProgress={
+ async upload(payload){if(!user||!db)throw Error("سجّل الدخول بعد إعداد قاعدة البيانات.");const raw=JSON.stringify(payload);if(raw.length>3_500_000)throw Error("حجم النسخة يتجاوز الحد الآمن للمزامنة؛ أزل الصورة الشخصية أو صدّر نسخة محلية.");await set(ref(db,`userProgress/${user.uid}`),{schemaVersion:1,updatedAt:Date.now(),payload});},
+ async download(){if(!user||!db)throw Error("سجّل الدخول بعد إعداد قاعدة البيانات.");const snap=await get(ref(db,`userProgress/${user.uid}`));return snap.val()?.payload||null;}
+};bindUI();loadConfig();
 setInterval(()=>{if(user&&$("view-discipline-campaigns")?.classList.contains("active"))refreshCampaigns();},30000);
 window.__soloCloudLoaded=true;

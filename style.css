@@ -115,3 +115,19 @@ body.zone-active .status-fab{display:none}
 .google-signin-btn{display:inline-flex;align-items:center;gap:10px;border:1px solid #dadce0;border-radius:8px;background:#fff;color:#1f1f1f;padding:10px 16px;font:600 14px Arial,sans-serif;cursor:pointer;min-height:42px}.google-signin-btn:hover{background:#f7f8f8;box-shadow:0 1px 3px #0002}
 
 .auth-gate{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;padding:22px;background:radial-gradient(ellipse at 50% 15%,#123662 0,#070c19 60%,#03050a 100%)}.auth-gate[hidden]{display:none}.auth-gate-card{width:min(520px,100%);padding:30px;border:1px solid #35577e;border-radius:18px;background:linear-gradient(145deg,#101c31,#080d18);box-shadow:0 0 70px #168bdb2b}.auth-gate-card h1{font-size:32px;margin:8px 0 12px}.auth-gate-card .account-actions{display:grid;grid-template-columns:1fr;margin:22px 0}.auth-gate-card .account-actions button{width:100%;justify-content:center}.auth-gate .firebase-setup{background:#0a1220}
+
+.ai-settings{margin:8px 0;border:1px solid #284365;border-radius:12px;background:#0a1222;padding:10px 14px}.ai-settings summary{cursor:pointer;font-weight:700;color:#cfe2ff}.ai-settings-body{display:grid;gap:10px;margin-top:12px}.ai-settings-body label{display:grid;gap:6px;font-size:13px;color:#b8c8de}.ai-settings-body input,.ai-settings-body select{padding:10px;border:1px solid #29415e;border-radius:10px;background:#080f1d;color:#eef6ff;font:inherit;direction:ltr;text-align:left}.ai-settings-actions{display:flex;gap:8px;flex-wrap:wrap}#aiTestResult{line-height:1.7;word-break:break-word}
+
+/* احترام تفضيل تقليل الحركة في إعدادات النظام */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* New optional planning tools */
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px;margin:16px 0 28px}.hunter-extras .panel{min-width:0}.hunter-extras .panel label{display:grid;gap:6px;margin:9px 0}.feature-clock{font:700 36px Rajdhani,sans-serif;text-align:center;padding:12px;color:var(--cyan)}.activity-calendar{display:grid;grid-template-columns:repeat(7,minmax(16px,1fr));gap:5px}.activity-day{aspect-ratio:1;border:1px solid #31435d;border-radius:4px;background:#0b1424;cursor:pointer}.activity-day.level-1{background:#17476a}.activity-day.level-2{background:#176b78}.activity-day.level-3{background:#278d76}.activity-day.level-4{background:#62bd81}.feature-notice{position:sticky;bottom:14px;z-index:10;padding:12px;border:1px solid var(--cyan);border-radius:10px;background:#101e31;color:#eef6ff}.campaign-audit{flex-basis:100%;font-size:12px}.campaign-audit small{display:block;padding:4px 0;color:var(--muted)}.focus-mode .topbar,.focus-mode .sidebar,.focus-mode .footer{display:none}.focus-mode .shell{display:block}.focus-mode .workspace{max-width:900px;margin:auto}.focus-mode .view:not(#view-enhancements){display:none!important}
+@media(max-width:700px){.feature-grid{grid-template-columns:1fr}.activity-calendar{gap:3px}}

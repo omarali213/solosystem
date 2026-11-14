@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#080d1c">
   <title>Solo Leveling System | V9</title>
+  <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -130,16 +131,27 @@
           <div class="panel ai-report-panel"><div class="panel-head"><div><p class="eyebrow">MASTERY TRIAL</p><h3>اختبار إتقان مقترح</h3></div><span class="soft-pill">حد النجاح 80/100</span></div><div id="aiMasteryChallenge" class="ai-challenge"><p>سيتم اقتراح تحدٍ حسب تقدمك.</p></div><button type="button" class="ghost-btn" id="aiOpenMastery">فتح غرفة اختبارات الإتقان ↗</button></div>
         </div>
         <div class="section-head"><div><p class="eyebrow">ADAPTIVE ROADMAP</p><h2>خطة التطوير والمهام المقترحة</h2><p class="muted">حوّل أي اقتراح إلى مهمة جديدة، ثم عدّلها لتناسب وقتك وهدفك.</p></div></div>
+        <div style="margin:10px 0"><button type="button" class="ghost-btn" id="aiSuggestBtn">✦ اقترح مهام بالذكاء الاصطناعي</button> <small id="aiSuggestStatus" class="muted"></small></div>
+        <div id="aiSuggestions" class="ai-plan-grid"></div>
         <div id="aiPlan" class="ai-plan-grid"><div class="panel"><p class="muted">سيتم إنشاء خطة بناءً على المهام والاختبارات المسجلة.</p></div></div>
-        <div class="section-head"><div><p class="eyebrow">ELITE SHADOW LINK</p><h2>التحدث مع ظلال S فقط</h2><p class="muted">تظهر هنا فقط ظلال الرتبة S وS+ التي استخرجتها بالفعل من الزنزانات.</p></div></div>
+        <div class="section-head"><div><p class="eyebrow">ELITE SHADOW LINK</p><h2>التحدث مع المستشار وظلال S</h2><p class="muted">المستشار متاح دائمًا، وظلال الرتبة S وS+ تظهر بعد استخراجها من الزنزانات.</p></div></div>
         <div class="panel ai-shadow-panel">
+          <label class="toggle-row" style="display:flex;gap:8px;align-items:center;margin:6px 0"><input type="checkbox" id="aiTestMode"> وضع تجربة مؤقت: ظل تجريبي للمحادثة بدون ما تستخرج ظل S</label>
           <div id="aiShadowAvailability" class="soft-pill">جارٍ التحقق من ظلال S المؤهلة…</div>
           <div id="aiShadowIntro" class="ai-shadow-intro"></div>
-          <label class="skill-path-label">اختر الظل<select id="aiShadowSelect"><option value="">لا توجد ظلال S مؤهلة بعد</option></select></label>
-          <div id="aiChatMessages" class="ai-chat-messages"><div class="empty">استخرج ظلًا من الفئة S أو S+ لبدء المحادثة.</div></div>
-          <div class="ai-proxy-row" style="display:flex;gap:8px;margin:8px 0"><input id="aiProxyUrl" type="url" autocomplete="off" placeholder="رابط الـ AI Proxy (https://…workers.dev) — فاضي = الرد المحلي" style="flex:1" aria-label="رابط AI Proxy"><button type="button" class="ghost-btn" id="aiProxySave">حفظ</button></div>
+          <label class="skill-path-label">اختر الظل<select id="aiShadowSelect"><option value="">جارٍ التحميل…</option></select></label>
+          <div id="aiChatMessages" class="ai-chat-messages"><div class="empty">اكتب سؤالك لبدء المحادثة…</div></div>
+          <details class="ai-settings" id="aiSettings"><summary>⚙ إعدادات الذكاء الاصطناعي <span id="aiModeBadge" class="soft-pill"></span></summary>
+            <div class="ai-settings-body">
+              <label>مفتاح Gemini مخصص (اختياري — بيتحفظ في متصفحك بس)<input id="aiKeyInput" type="password" autocomplete="off" spellcheck="false" placeholder="أدخل مفتاحًا شخصيًا فقط عند استخدام الوضع المباشر" aria-label="مفتاح Gemini"></label>
+              <label>الموديل<select id="aiModelSelect"><option value="gemini-3.5-flash-lite">gemini-3.5-flash-lite (موصى به)</option><option value="gemini-3.8-flash">gemini-3.8-flash</option></select></label>
+              <label>رابط الـ Proxy (الموصى به — لا يتحول للمفتاح المباشر تلقائيًا)<input id="aiProxyUrl" type="url" autocomplete="off" placeholder="https://…workers.dev" aria-label="رابط AI Proxy"></label>
+              <div class="ai-settings-actions"><button type="button" class="primary-btn" id="aiProxySave">حفظ</button><button type="button" class="ghost-btn" id="aiTestBtn">اختبار الاتصال</button><button type="button" class="ghost-btn" id="aiClearBtn">مسح الإعدادات</button></div>
+              <small id="aiTestResult" class="muted"></small>
+              <small class="muted">⚠ لا يوجد مفتاح مدمج. المفتاح المباشر محفوظ في هذا المتصفح؛ استخدمه على جهاز شخصي فقط. عند إعداد Proxy لا يُرسل المفتاح المباشر تلقائيًا إذا تعطل. للنشر العام استخدم Proxy.</small>
+            </div></details>
           <form id="aiShadowChatForm" class="ai-chat-form"><input id="aiShadowMessage" maxlength="500" autocomplete="off" placeholder="اسأل الظل عن خطة أو مهارة أو عائق…" aria-label="رسالتك إلى الظل"><button class="primary-btn" type="submit">إرسال ↗</button></form>
-          <small class="muted">المحادثة الحالية تعتمد على قواعد نصية محلية وأنماط شخصية للظل، وليست اتصالًا بخدمة ذكاء اصطناعي خارجية.</small>
+          <small class="muted">لو مفيش مفتاح أو Proxy شغّال، الشات بيستخدم ردودًا محلية جاهزة. اضبط الذكاء الاصطناعي من «إعدادات الذكاء الاصطناعي» فوق.</small>
         </div>
       </section>
       <footer class="footer">SYSTEM V9.0 <span>•</span> YOUR REAL LIFE IS THE MAIN QUEST.</footer>
@@ -159,9 +171,24 @@
   <div id="toast" class="toast" role="status"></div>
   <script src="ai-client.js"></script>
   <script src="script.js"></script>
+  <script src="features.js"></script>
   <script>(function(){["googleSignInButton","googleGateSignIn"].forEach(function(id){var b=document.getElementById(id);if(!b)return;b.addEventListener("click",function(){if(window.__soloCloudLoaded)return;var m=location.protocol==="file:"?"الصفحة مفتوحة من file:// فالمتصفح بيمنع تحميل ملف تسجيل الدخول. شغّل الموقع عبر localhost (python -m http.server 8000) أو ارفعه على HTTPS.":"لسه ملف تسجيل الدخول ما اتحمّلش. استنى ثانية وجرّب تاني، ولو فضل كده افتح Console (F12) وابعتلي الخطأ.";var el=document.getElementById("authGateStatus")||document.getElementById("firebaseSetupStatus");if(el)el.textContent=m;else alert(m);});});})();</script>
 <script type="module" src="cloud-auth.js"></script>
-<script>(function(){var i=document.getElementById("aiProxyUrl"),b=document.getElementById("aiProxySave");if(!i||!b||!window.SoloAI)return;i.value=SoloAI.getUrl();b.addEventListener("click",function(){SoloAI.setUrl(i.value);alert(i.value.trim()?"تم حفظ رابط الـ AI.":"تم الرجوع للرد المحلي.");});})();</script>
+<script>(function(){
+var $=function(id){return document.getElementById(id)};if(!window.SoloAI||!$("aiProxyUrl"))return;
+var tm=$("aiTestMode");if(tm){tm.checked=localStorage.getItem("soloAiTestMode")==="1";tm.addEventListener("change",function(){localStorage.setItem("soloAiTestMode",tm.checked?"1":"0");if(typeof renderAiAssistant==="function")renderAiAssistant();});}
+var badge=function(){var m=SoloAI.mode();$("aiModeBadge").textContent=({proxy:"Proxy",direct:"مباشر",local:"محلي"})[m]};
+var load=function(){$("aiProxyUrl").value=SoloAI.getUrl();$("aiKeyInput").value=SoloAI.getUserKey();$("aiModelSelect").value=SoloAI.getModel();badge()};
+var save=function(){SoloAI.setUrl($("aiProxyUrl").value);SoloAI.setKey($("aiKeyInput").value);SoloAI.setModel($("aiModelSelect").value);badge();$("aiTestResult").textContent=SoloAI.enabled()?"تم الحفظ. اضغط «اختبار الاتصال» للتأكد.":"تم الرجوع للردود المحلية."};
+$("aiProxySave").addEventListener("click",save);
+$("aiClearBtn").addEventListener("click",function(){SoloAI.setUrl("");SoloAI.setKey("");SoloAI.setModel("");load();$("aiTestResult").textContent="تم مسح الإعدادات."});
+$("aiTestBtn").addEventListener("click",function(){save();if(!SoloAI.enabled()){$("aiTestResult").textContent="أدخل مفتاح Gemini أو رابط Proxy أولًا.";return}
+$("aiTestResult").textContent="جارٍ الاختبار…";SoloAI.test().then(function(r){$("aiTestResult").textContent="✓ شغّال: "+r}).catch(function(e){$("aiTestResult").textContent="✗ "+e.message})});
+load();})();</script>
+<script>(function(){var b=document.getElementById("aiSuggestBtn");if(!b||!window.SoloAI)return;var esc=function(t){return String(t).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})};
+b.addEventListener("click",function(){var st=document.getElementById("aiSuggestStatus"),box=document.getElementById("aiSuggestions");if(!SoloAI.enabled()){st.textContent="فعّل الذكاء الاصطناعي من الإعدادات الأول.";return}
+b.disabled=true;st.textContent="جارٍ التفكير…";SoloAI.suggestTasks(window.__soloState&&window.__soloState()||{quests:[]}).then(function(list){st.textContent="";box.innerHTML=list.map(function(x,i){return '<article class="ai-plan-card"><span class="eyebrow">AI SUGGESTION '+(i+1)+'</span><h4>'+esc(x.name)+'</h4><p>'+esc(x.why)+'</p><button class="ghost-btn" type="button" data-ai-task="'+esc(x.name)+'">＋ تحويل لمهمة</button></article>'}).join("")}).catch(function(e){st.textContent="✗ "+e.message}).finally(function(){b.disabled=false})});})();</script>
+<script>if("serviceWorker" in navigator && location.protocol!=="file:"){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}</script>
 </body>
 </html>
 

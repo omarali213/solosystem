@@ -18,6 +18,12 @@
             ".write": "auth != null && auth.uid == $uid && root.child('campaigns').child($campaignId).child('members').child($uid).exists() && now <= root.child('campaigns').child($campaignId).child('meta').child('endsAt').val() + 60000",
             ".validate": "newData.child('updatedAt').isNumber()"
           }
+        },
+        "events": {
+          "$eventId": {
+            ".validate": "newData.hasChildren(['uid', 'displayName', 'action', 'at']) && newData.child('uid').isString() && newData.child('displayName').isString() && newData.child('action').isString() && newData.child('at').isNumber()",
+            ".write": "auth != null && !data.exists() && newData.child('uid').val() == auth.uid && (root.child('campaigns').child($campaignId).child('meta').child('ownerUid').val() == auth.uid || root.child('campaigns').child($campaignId).child('members').child(auth.uid).exists())"
+          }
         }
       }
     },
@@ -33,6 +39,13 @@
         "$campaignId": {
           ".write": "auth != null && auth.uid == $uid && newData.val() == true && root.child('campaigns').child($campaignId).child('members').child($uid).exists()"
         }
+      }
+    },
+    "userProgress": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".validate": "newData.hasChildren(['schemaVersion', 'updatedAt', 'payload']) && newData.child('schemaVersion').val() == 1 && newData.child('updatedAt').isNumber()",
+        ".write": "auth != null && auth.uid == $uid"
       }
     }
   }
