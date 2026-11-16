@@ -9,7 +9,7 @@
     if(file.type.startsWith("video/")){const video=document.createElement("video");video.preload="metadata";video.muted=true;video.src=URL.createObjectURL(file);try{await new Promise((resolve,reject)=>{video.onloadedmetadata=resolve;video.onerror=()=>reject(new Error("تعذر فتح الفيديو"));});if(!Number.isFinite(video.duration)||video.duration>120)throw new Error("الفيديو لازم يكون دقيقتين أو أقل.");const times=[Math.min(.1,video.duration/2),video.duration*.25,video.duration*.5,video.duration*.75,Math.max(0,video.duration-.1)],parts=[];for(const t of times){const b=await frame(video,t);parts.push({mimeType:"image/jpeg",data:await blobData(b)});}return parts;}finally{URL.revokeObjectURL(video.src);video.remove();}}
     throw new Error("اختر صورة أو فيديو مدعومًا.");}
   window.SoloProofMedia={prepare};
-  const K={url:"soloAiProxyUrl",key:"soloGeminiKey",model:"soloGeminiModel"};
+  const K={url:"soloAiProxyUrl",key:"soloGeminiKey",model:"soloGeminiModel",provider:"soloAiProvider",providerUrl:"soloAiProviderUrl"};
   const DEFAULT_URL="https://purple-dew-821e.omaralisombl321321456.workers.dev";
   const DEFAULT_MODEL="gemini-3.5-flash-lite";
   const MODELS=["gemini-3.5-flash-lite","gemini-3.8-flash"];
@@ -20,8 +20,10 @@
   const getUserKey=()=>lsGet(K.key);
   // No API keys are shipped with the app. Direct mode is an explicit personal-device choice.
   const getKey=getUserKey,setKey=v=>lsSet(K.key,v);
-  const getModel=()=>MODELS.includes(lsGet(K.model))?lsGet(K.model):DEFAULT_MODEL,setModel=v=>lsSet(K.model,MODELS.includes(v)?v:DEFAULT_MODEL);
-  const mode=()=>getUrl()?"proxy":getKey()?"direct":"local";
+  const getProvider=()=>lsGet(K.provider)==="openai-compatible"?"openai-compatible":"gemini",setProvider=v=>lsSet(K.provider,v==="openai-compatible"?v:"gemini");
+  const getProviderUrl=()=>lsGet(K.providerUrl).replace(/\/+$/,""),setProviderUrl=v=>lsSet(K.providerUrl,v);
+  const getModel=()=>getProvider()==="gemini"?(MODELS.includes(lsGet(K.model))?lsGet(K.model):DEFAULT_MODEL):(lsGet(K.model)||"").slice(0,100),setModel=v=>lsSet(K.model,getProvider()==="gemini"?(MODELS.includes(v)?v:DEFAULT_MODEL):String(v||"").slice(0,100));
+  const mode=()=>getProvider()==="openai-compatible"?(getProviderUrl()&&getKey()?"compatible":"local"):getUrl()?"proxy":getKey()?"direct":"local";
   const enabled=()=>mode()!=="local";
   const GEM=m=>`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(m)}:generateContent`;
 
@@ -105,11 +107,20 @@
     if(!r.ok)throw new Error(friendly(r.status,j&&j.error&&j.error.message));
     return extract(j);
   }
+  async function askCompatible(message,shadow,st,history){
+    const base=getProviderUrl(),model=getModel();if(!base||!model)throw new Error("أدخل رابط API والموديل لمزود OpenAI-compatible.");
+    const url=/\/chat\/completions$/i.test(base)?base:base+"/chat/completions",messages=[{role:"system",content:systemPrompt(shadow,summary(st))},...buildContents(history,message).map(x=>({role:x.role==="model"?"assistant":"user",content:x.parts.map(p=>p.text||"").join("\n")}))];
+    const {r,j}=await post(url,{Authorization:"Bearer "+getKey()},{model,messages,temperature:0.8,max_tokens:900},30000);
+    if(!r.ok)throw new Error((j&&j.error&&j.error.message)||("HTTP "+r.status));
+    const content=j&&j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content;
+    const reply=Array.isArray(content)?content.map(p=>p.text||"").join("").trim():String(content||"").trim();if(!reply)throw new Error("رد فارغ من مزود الذكاء الاصطناعي.");return reply;
+  }
   async function ask(message,shadow,st,history){
     message=String(message||"").slice(0,500);
     const m=mode();
     if(m==="local")throw new Error("NO_AI");
     if(m==="proxy")return askProxy(message,shadow,st,history);
+    if(m==="compatible")return askCompatible(message,shadow,st,history);
     return askDirect(message,shadow,st,history);
   }
   function proofPrompt(taskName,taskDescription,kind){
@@ -126,6 +137,7 @@
   }
   async function verifyProof(file,taskName,taskDescription,kind){
     if(!enabled())throw new Error("الذكاء الاصطناعي غير مفعّل: أضف مفتاح Gemini أو رابط Proxy من «مساعد النظام AI».");
+    if(mode()==="compatible")throw new Error("تحليل الصور والفيديو متاح حاليًا عبر Gemini أو Gemini Worker Proxy فقط.");
     const media=await window.SoloProofMedia.prepare(file);
     if(mode()==="proxy"){
       try{
@@ -146,5 +158,5 @@
     return lines.map(l=>({name:l.slice(0,80),why:""}));
   }
   async function test(){return ask("قول جملة قصيرة تأكد إنك شغال.",{name:"اختبار",rank:"SYSTEM",desc:""},{quests:[]},[]);}
-  window.SoloAI={ask,test,suggestTasks,getUserKey,verifyProof,mode,enabled,getUrl,setUrl,getKey,setKey,getModel,setModel};
+  window.SoloAI={ask,test,suggestTasks,getUserKey,verifyProof,mode,enabled,getUrl,setUrl,getKey,setKey,getModel,setModel,getProvider,setProvider,getProviderUrl,setProviderUrl};
 })();
