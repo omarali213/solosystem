@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>دليل المستخدم الجديد | Solo Leveling System</title>
+<style>
+:root{
+  --bg:#070914;--panel:#0e1226;--panel2:#141a36;--line:#252d57;
+  --text:#e8ebff;--muted:#9aa3d1;--accent:#7c5cff;--accent2:#22d3ee;
+  --good:#34d399;--warn:#fbbf24;--bad:#f87171;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:16px}
+body{margin:0;background:radial-gradient(1200px 600px at 80% -10%,#1a1450 0,transparent 60%),var(--bg);
+  color:var(--text);font-family:"Segoe UI",Tahoma,"Noto Naskh Arabic","Noto Sans Arabic",Arial,sans-serif;
+  line-height:1.9;font-size:16px}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 16px 80px;display:grid;grid-template-columns:240px 1fr;gap:28px}
+nav.toc{position:sticky;top:16px;align-self:start;max-height:calc(100vh - 32px);overflow:auto;
+  background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+nav.toc b{display:block;color:var(--accent2);font-size:13px;letter-spacing:1px;margin-bottom:8px}
+nav.toc a{display:block;color:var(--muted);text-decoration:none;padding:5px 8px;border-radius:8px;font-size:14px}
+nav.toc a:hover{background:var(--panel2);color:var(--text)}
+header.hero{grid-column:1/-1;text-align:center;padding:28px 12px 8px}
+.tag{display:inline-block;font:12px/1 monospace;letter-spacing:2px;color:var(--accent2);
+  border:1px solid var(--line);padding:6px 12px;border-radius:99px;background:var(--panel)}
+h1{font-size:clamp(26px,5vw,42px);margin:14px 0 6px}
+.hero p{color:var(--muted);max-width:640px;margin:0 auto}
+section{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px 22px 14px;margin-bottom:18px}
+section h2{margin:0 0 4px;font-size:22px}
+section h2 small{display:block;font:12px monospace;letter-spacing:2px;color:var(--accent);margin-bottom:2px}
+h3{margin:18px 0 4px;font-size:17px;color:var(--accent2)}
+p{margin:8px 0}
+ul,ol{padding-inline-start:22px;margin:8px 0}
+li{margin:4px 0}
+.muted{color:var(--muted)}
+.callout{border-inline-start:4px solid var(--accent);background:var(--panel2);padding:10px 14px;border-radius:10px;margin:12px 0}
+.callout.tip{border-color:var(--good)}
+.callout.warn{border-color:var(--warn)}
+.callout.bad{border-color:var(--bad)}
+.callout b:first-child{display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+.card{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.card b{color:var(--accent2)}
+.table-wrap{overflow-x:auto;margin:12px 0}
+table{border-collapse:collapse;width:100%;min-width:480px;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:right;vertical-align:top}
+th{background:var(--panel2);color:var(--accent2)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:10px 52px 10px 12px;background:var(--panel2);
+  border:1px solid var(--line);border-radius:12px;margin:8px 0}
+.steps li::before{content:counter(s);position:absolute;right:12px;top:10px;width:28px;height:28px;border-radius:50%;
+  background:var(--accent);display:grid;place-items:center;font-weight:700}
+code,kbd{background:#0a0d20;border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-family:Consolas,monospace;font-size:13px}
+details{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:8px 14px;margin:8px 0}
+summary{cursor:pointer;font-weight:600}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:8px 0;cursor:pointer}
+.check input{margin-top:8px;accent-color:var(--accent)}
+.check input:checked+span{opacity:.55;text-decoration:line-through}
+footer{grid-column:1/-1;text-align:center;color:var(--muted);font-size:13px;margin-top:10px}
+@media(max-width:820px){.wrap{grid-template-columns:1fr}nav.toc{position:static;max-height:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <span class="tag">SOLO LEVELING SYSTEM // V10.3</span>
+  <h1>دليل المستخدم الجديد</h1>
+  <p>اتعلم تستخدم النظام من أول دخول، وافهم الفكرة وراه: تحوّل انضباطك في حياتك الحقيقية للعبة RPG بتكبر فيها فعلًا.</p>
+</header>
+
+<nav class="toc" aria-label="فهرس الدليل">
+  <b>الفهرس</b>
+  <a href="#what">١. إيه هو البرنامج؟</a>
+  <a href="#concepts">٢. المفاهيم الأساسية</a>
+  <a href="#start">٣. ابدأ في ٥ دقايق</a>
+  <a href="#map">٤. خريطة القائمة</a>
+  <a href="#quests">٥. المهمات</a>
+  <a href="#ranks">٦. المستويات والرتب</a>
+  <a href="#penalties">٧. الفشل والعقوبات</a>
+  <a href="#dungeons">٨. الزنزانات</a>
+  <a href="#shadows">٩. جيش الظلال</a>
+  <a href="#shop">١٠. المتجر</a>
+  <a href="#attrs">١١. نقاط الصياد</a>
+  <a href="#growth">١٢. التطوير والإتقان</a>
+  <a href="#center">١٣. مركز الصياد</a>
+  <a href="#coop">١٤. حملات الأصدقاء</a>
+  <a href="#ai">١٥. مساعد الذكاء الاصطناعي</a>
+  <a href="#save">١٦. الحفظ والنسخ الاحتياطي</a>
+  <a href="#tips">١٧. نصايح وأسئلة شائعة</a>
+</nav>
+
+<main>
+
+<section id="what">
+  <h2><small>01 // PURPOSE</small>إيه هو البرنامج، وليه موجود؟</h2>
+  <p>Solo Leveling System موقع بيساعدك تبني <b>الانضباط الحقيقي</b> بأسلوب لعبة مستوحاة من أنمي Solo Leveling. بدل ما تكتب To-Do list مملة، كل مهمة بتنجزها في الواقع بتديك <b>XP</b> و<b>عملات</b>، وبتعلّي مستواك ورتبتك من E لحد S+، وبتفتح معدات وظلال وزنزانات.</p>
+  <div class="grid">
+    <div class="card"><b>🎯 الغرض</b><br>تحويل العادات والمهام اليومية لرحلة تطور ممتعة ومقاسة بالأرقام.</div>
+    <div class="card"><b>🧭 المبدأ</b><br>«حياتك الحقيقية هي المهمة الرئيسية». مفيش XP من غير إنجاز فعلي.</div>
+    <div class="card"><b>🛡️ الأسلوب</b><br>مساءلة بدون جلد ذات. العقوبات بنّاءة وآمنة، ومفيش حرمان من نوم أو تمرين مؤذي.</div>
+  </div>
+  <div class="callout warn"><b>مهم تعرفه من الأول</b>
+    النظام بيعتمد على صدقك مع نفسك. إنت اللي بتعلّم المهمة «مكتملة»، فلو غشيت هتخدع نفسك بس.</div>
+</section>
+
+<section id="concepts">
+  <h2><small>02 // CORE CONCEPTS</small>المفاهيم الأساسية في ٣٠ ثانية</h2>
+  <div class="table-wrap"><table>
+    <tr><th>المصطلح</th><th>معناه</th></tr>
+    <tr><td><b>Quest (مهمة)</b></td><td>أي حاجة حقيقية عايز تنجزها: مذاكرة، تمرين، قراءة…</td></tr>
+    <tr><td><b>XP</b></td><td>نقاط الخبرة. بتعلّي مستواك ورتبتك. بتاخدها عند إنجاز المهمة.</td></tr>
+    <tr><td><b>DC (Discipline Coins)</b></td><td>عملة النظام. بتشتري بيها من المتجر (بعد رتبة A).</td></tr>
+    <tr><td><b>Level (المستوى)</b></td><td>بيزيد مع الـ XP ومش بينزل أبدًا. كل مستوى بيديك ٣ نقاط تطوير.</td></tr>
+    <tr><td><b>Rank (الرتبة)</b></td><td>من E لـ S+. بتفتح ميزات جديدة زي المتجر.</td></tr>
+    <tr><td><b>Dungeon (زنزانة)</b></td><td>تحدي متعدد الخطوات ضد <u>عادة سيئة</u> إنت اللي بتختارها.</td></tr>
+    <tr><td><b>Shadow (ظل)</b></td><td>أثر دائم لعادة هزمتها. بيتضم لجيشك بعد ARISE.</td></tr>
+    <tr><td><b>Penalty (عقوبة)</b></td><td>مهمة تصحيح بتظهر لما تفشل. لحد ما تنفذها مش هتاخد مكافآت جديدة.</td></tr>
+  </table></div>
+</section>
+
+<section id="start">
+  <h2><small>03 // QUICK START</small>ابدأ في ٥ دقايق</h2>
+  <ol class="steps">
+    <li><b>سجّل دخول.</b> هتظهر لك «بوابة الدخول» بـ ٣ اختيارات: <b>Google</b> (أفضل اختيار لو عايز مزامنة وحملات مع أصحابك)، <b>ضيف سحابي</b>، أو <b>ضيف محلي</b> (بدون أي ربط، والتقدم محفوظ في المتصفح بس).</li>
+    <li><b>جهّز ملفك.</b> من <code>الإعدادات والحفظ</code> اكتب اسمك وهدفك الرئيسي، وارفع صورتك لو حابب.</li>
+    <li><b>اعمل أول مهمة.</b> اضغط <code>＋ مهمة جديدة</code>. ابدأ بحاجة صغيرة جدًا (مثلًا: «اقرأ ١٠ صفحات»). سيب الـ XP على ٢٠ والـ DC على ٥ للبداية.</li>
+    <li><b>نفّذها في الواقع</b>، وارجع اضغط «إكمال». هتشوف رسالة <code>QUEST COMPLETED</code> وهيزيد الـ XP.</li>
+    <li><b>كرر يوميًا.</b> أهم رقم في النظام هو الـ <b>Streak</b> (أيام الالتزام المتتالية). ٧ أيام متتالية بتديك لقب <b>Consistent Hunter</b>.</li>
+  </ol>
+  <div class="callout tip"><b>قاعدة ذهبية للمبتدئين</b>
+    ابدأ بـ ١ إلى ٣ مهمات في اليوم بس. الحماس العالي في أول يومين وبعدها الانهيار هو أكبر سبب لترك أي نظام.</div>
+
+  <h3>قائمة أول يوم</h3>
+  <div class="check">
+    <label><input type="checkbox"><span>سجلت دخول واخترت نوع الحساب</span></label>
+    <label><input type="checkbox"><span>كتبت اسمي وهدفي في الإعدادات</span></label>
+    <label><input type="checkbox"><span>أضفت أول مهمة صغيرة</span></label>
+    <label><input type="checkbox"><span>أنجزتها وشفت الـ XP بيزيد</span></label>
+    <label><input type="checkbox"><span>صدّرت أول نسخة احتياطية من الإعدادات</span></label>
+  </div>
+</section>
+
+<section id="map">
+  <h2><small>04 // NAVIGATION</small>خريطة القائمة الجانبية</h2>
+  <div class="grid">
+    <div class="card"><b>النظام</b><br>لوحة النظام · المهمات · الـ Dungeons · حملات الانضباط · العقوبات</div>
+    <div class="card"><b>تقدم الصياد</b><br>تطوير الصياد · نقاط الصياد · جيش الظلال · المتجر · الإحصائيات · الإنجازات · Hunter Mastery · Evolution</div>
+    <div class="card"><b>الأدوات والإعدادات</b><br>مساعد النظام AI · مركز الصياد · الإعدادات والحفظ</div>
+  </div>
+  <p>اختصارات لوحة المفاتيح: <kbd>Alt+1</kbd> لوحة النظام · <kbd>Alt+2</kbd> المهمات · <kbd>Alt+3</kbd> مركز الصياد · <kbd>Esc</kbd> إنهاء جلسة التركيز.</p>
+  <h3>لوحة النظام (الصفحة الرئيسية)</h3>
+  <ul>
+    <li><b>رتبتك ومستواك وشريط الـ XP</b> وعدد العملات والمهمات المكتملة.</li>
+    <li><b>مركز الأوامر اليومي:</b> نسبة إنجاز مهام النهارده، العقوبات المستحقة، الجلسة الجارية، ونصيحة بتتكيف مع حملك وتعثراتك.</li>
+    <li><b>حالة الصياد:</b> صفاتك الخمس (القوة، الانضباط، الذكاء، الحيوية، الرشاقة).</li>
+    <li><b>المهمات النشطة وتنبيهات النظام.</b></li>
+  </ul>
+</section>
+
+<section id="quests">
+  <h2><small>05 // QUESTS</small>المهمات</h2>
+  <p>من صفحة <code>المهمات Quests</code> اضغط <code>＋ إضافة مهمة</code> وهتلاقي الحقول دي:</p>
+  <div class="table-wrap"><table>
+    <tr><th>الحقل</th><th>الشرح</th></tr>
+    <tr><td>النوع</td><td>يومية · يومية إجبارية · أسبوعية · رئيسية · طارئة</td></tr>
+    <tr><td>الصفة الأساسية</td><td>الانضباط · القوة · الرشاقة · الحيوية · الذكاء. المهمة بتزوّد الصفة دي لما تكتمل.</td></tr>
+    <tr><td>الصعوبة</td><td>E سهلة · D عادية · C صعبة · B نخبة · A زعيم · S بوابة حمراء (×٢)</td></tr>
+    <tr><td>XP</td><td>من ١ لـ ١٠٠</td></tr>
+    <tr><td>DC</td><td>من ١ لـ ٢٥</td></tr>
+    <tr><td>موعد نهائي</td><td>اختياري. لو عدّى من غير ما تنجز، المهمة بتتسجل <b>فشل</b> تلقائيًا.</td></tr>
+    <tr><td>جلسة تركيز</td><td>بدون مؤقت · ٢٥ · ٤٥ · ٥٠ دقيقة. لو اخترت مدة لازم تكمل الجلسة قبل ما تقدر تنجز المهمة.</td></tr>
+    <tr><td>التكرار</td><td>بدون · يوميًا · أسبوعيًا (بتتجدد لوحدها)</td></tr>
+  </table></div>
+  <h3>المهمات اليومية الإجبارية</h3>
+  <p>أقصى حد <b>٣ مهمات إجبارية في اليوم</b>. حدد لكل واحدة موعد، ولو الوقت خلص قبل ما تنفذها بتتسجل فشل وتتضاف عقوبة. استخدمها لأهم حاجات يومك بس.</p>
+  <h3>اختيار XP والصعوبة بذكاء</h3>
+  <ul>
+    <li>اختار الـ XP حسب مجهودك الحقيقي: ١٠–٣٠ للمهمة الصغيرة، ٥٠+ للمهمة اللي بتاخد وقت وتركيز.</li>
+    <li>فلاتر أعلى القائمة (الكل، يومية، إجبارية، أسبوعية…) بتساعدك تلاقي مهمتك بسرعة.</li>
+  </ul>
+  <div class="callout"><b>Strict Mode (وضع صارم)</b>
+    من الإعدادات. لما يتفعّل، مش هتقدر تعدّل أو تمسح مهمة بعد ١٠ دقايق من إنشائها، ولا تمسح عقوبة مستحقة. مفيد ضد الاندفاع.</div>
+</section>
+
+<section id="ranks">
+  <h2><small>06 // LEVELS &amp; RANKS</small>المستويات والرتب</h2>
+  <p>المستوى الأول بيحتاج <b>٥٠٠ XP</b>، وكل مستوى بعده بيحتاج <b>١٢٥ XP زيادة</b> عن اللي قبله (٥٠٠ ثم ٦٢٥ ثم ٧٥٠…). والمستوى <b>مش بينزل أبدًا</b>.</p>
+  <div class="table-wrap"><table>
+    <tr><th>الرتبة</th><th>XP المطلوب</th><th>اللقب</th><th>حاجة جديدة</th></tr>
+    <tr><td>E</td><td>0</td><td>E-RANK HUNTER</td><td>البداية</td></tr>
+    <tr><td>D</td><td>1,500</td><td>D-RANK HUNTER</td><td>—</td></tr>
+    <tr><td>C</td><td>3,500</td><td>C-RANK HUNTER</td><td>—</td></tr>
+    <tr><td>B</td><td>6,500</td><td>B-RANK HUNTER</td><td>فتح حدث Awakening</td></tr>
+    <tr><td>A</td><td>10,000</td><td>A-RANK HUNTER</td><td>فتح <b>متجر الصيادين</b></td></tr>
+    <tr><td>S</td><td>15,000</td><td>S-RANK HUNTER</td><td>ظلال S للمحادثة</td></tr>
+    <tr><td>S+</td><td>22,000</td><td>NATIONAL LEVEL HUNTER</td><td>أعلى رتبة، وجيش ظلال بلا حد</td></tr>
+  </table></div>
+  <p>من صفحة <code>Evolution</code> هتشوف تقدمك للرتبة الجاية، وكمان الألقاب اللي كسبتها. اضغط على لقب لتفعيله فيظهر فوق اسمك، واضغط تاني لإلغائه.</p>
+</section>
+
+<section id="penalties">
+  <h2><small>07 // FAILURE &amp; PENALTIES</small>الفشل والعقوبات</h2>
+  <p>الفشل جزء طبيعي من الرحلة. النظام مصمم عشان ترجع للمسار، مش عشان يعاقبك.</p>
+  <h3>لما مهمة تفشل</h3>
+  <ol>
+    <li>بيظهر لك نموذج «سجّل سبب التعثر». اكتب السبب بصراحة، هو بيساعدك في تحليل نقاط الضعف بعدين.</li>
+    <li>بيتخصم <b>حتى ٥ DC</b> (إلا لو معاك درع الانضباط أو خوذة الإرادة).</li>
+    <li>بتتضاف عقوبة «مراجعة سبب الفشل».</li>
+  </ol>
+  <div class="callout bad"><b>العقوبة المستحقة بتوقف المكافآت</b>
+    طول ما في عقوبة لسه ما نفذتهاش، مش هتقدر تاخد XP ولا DC من أي مهمة جديدة. نفّذها من صفحة <code>العقوبات</code>.</div>
+  <h3>Penalty Zone</h3>
+  <p>لو فشلت <b>٣ مهمات أو أكتر في نفس اليوم</b> بتفتح لك نافذة «منطقة العقوبة». تقدر تضيف عقوباتك الشخصية من صفحة العقوبات (مثلًا: ١٠ دقايق ترتيب، قراءة صفحة) وتختار منها. ولو اتعلقت، بتتفك لوحدها بعد ٢٤ ساعة.</p>
+  <h3>البوابة الحمراء (S)</h3>
+  <p>مكافأتها ×٢، لكن لو فشلت فيها بتخسر XP (ضعف XP المهمة بحد أقصى ٢٠٠)، من غير ما تنزل تحت مستواك أو رتبتك الحالية.</p>
+  <div class="callout tip"><b>تعافي بعد التعثر</b>
+    مقياس Recovery Rate بيحسب هل رجعت وأكملت مهمة من نفس الصفة خلال ٤٨ ساعة من الفشل. الهدف إنك ترجع بسرعة، مش إنك ما تفشلش أبدًا.</div>
+</section>
+
+<section id="dungeons">
+  <h2><small>08 // DUNGEONS</small>الـ Dungeons</h2>
+  <p>كل <b>١٠ مهمات مكتملة</b> بتظهر لك بوابة زنزانة. الزعيم فيها هو <b>عادة سيئة</b> إنت بتختارها.</p>
+  <ol class="steps">
+    <li>اكتب اسم عادة واحدة محددة (مثلًا: «تصفح الموبايل قبل النوم»، مش «أغيّر حياتي»).</li>
+    <li>راجع معاينة خطوات التحدي، واضغط «بدء الزنزانة». ممكن تأجّل الدخول.</li>
+    <li>نفّذ الخطوات قبل انتهاء المدة.</li>
+    <li>لو نجحت، بتاخد XP وDC وتقدر تحاول <b>ARISE</b> لتحويل الزعيم لظل.</li>
+  </ol>
+  <p>صعوبة الزنزانة وخطواتها بتتحدد حسب <b>رتبتك الحالية</b>:</p>
+  <div class="table-wrap"><table>
+    <tr><th>الرتبة</th><th>المدة</th><th>XP</th><th>DC</th></tr>
+    <tr><td>E</td><td>٣ أيام</td><td>120</td><td>25</td></tr>
+    <tr><td>D</td><td>٥ أيام</td><td>180</td><td>35</td></tr>
+    <tr><td>C</td><td>٧ أيام</td><td>260</td><td>45</td></tr>
+    <tr><td>B</td><td>١٠ أيام</td><td>360</td><td>60</td></tr>
+    <tr><td>A</td><td>١٤ يوم</td><td>500</td><td>80</td></tr>
+    <tr><td>S</td><td>٢١ يوم</td><td>700</td><td>110</td></tr>
+    <tr><td>S+</td><td>٣٠ يوم</td><td>1,000</td><td>150</td></tr>
+  </table></div>
+  <p>لو الوقت خلص قبل ما تكمّل، الزنزانة بتنتهي ويمكنك <b>إعادة المحاولة</b> من سجل الزنزانات.</p>
+</section>
+
+<section id="shadows">
+  <h2><small>09 // SHADOW ARMY</small>جيش الظلال</h2>
+  <p>بعد هزيمة زعيم زنزانة، تقدر تضغط <b>ARISE</b> لتحويله لظل دائم في جيشك. ده مش مضمون: كل زعيم له <b>٣ محاولات</b> كحد أقصى، والنجاح بنسبة احتمال تقل كل ما الرتبة ترتفع.</p>
+  <div class="table-wrap"><table>
+    <tr><th>رتبة الزنزانة</th><th>أقل مستوى</th><th>احتمال النجاح</th></tr>
+    <tr><td>E</td><td>2</td><td>78%</td></tr>
+    <tr><td>D</td><td>4</td><td>68%</td></tr>
+    <tr><td>C</td><td>6</td><td>60%</td></tr>
+    <tr><td>B</td><td>8</td><td>54%</td></tr>
+    <tr><td>A</td><td>10</td><td>48%</td></tr>
+    <tr><td>S</td><td>12</td><td>42%</td></tr>
+    <tr><td>S+</td><td>15</td><td>36%</td></tr>
+  </table></div>
+  <p class="muted">كمان فيه حد أدنى لصفاتك (الانضباط والقوة والذكاء…) لكل رتبة. لو ناقصك حاجة، النظام هيقولك بالظبط إيه الناقص.</p>
+  <p><b>حد حجم الجيش حسب رتبتك:</b> E = ٥ · D = ٨ · C = ١٢ · B = ١٨ · A = ٢٥ · S = ٤٠ · S+ = بلا حد.</p>
+</section>
+
+<section id="shop">
+  <h2><small>10 // SHOP</small>متجر الصيادين</h2>
+  <p>بيتفتح عند <b>رتبة A</b>. تنفق فيه عملات DC اللي جمعتها. الأغراض نوعين: استهلاكية (مرة واحدة) ومعدات (دائمة أو لحد ما تتستهلك).</p>
+  <div class="table-wrap"><table>
+    <tr><th>العنصر</th><th>السعر (DC)</th><th>تأثيره</th></tr>
+    <tr><td>⌛ تمديد الوقت</td><td>320</td><td>يضيف ساعتين لموعد مهمة نشطة</td></tr>
+    <tr><td>☾ تصريح الترفيه</td><td>480</td><td>يسجل ساعتين ترفيه مخطط لهم بدون تأنيب</td></tr>
+    <tr><td>📜 لفافة المهام</td><td>500</td><td>تولّد مهمة جانبية عشوائية بـ XP عالي (بدون عقوبة لو تجاهلتها)</td></tr>
+    <tr><td>🧪 إكسير الصحوة</td><td>650</td><td>+٢٥٪ XP للمهمة القادمة</td></tr>
+    <tr><td>◈ درع الانضباط</td><td>800</td><td>يمنع خصم DC لفشل مهمة (العقوبة تفضل)</td></tr>
+    <tr><td>🪖 خوذة الإرادة</td><td>900</td><td>تحميك مرة من خصم DC، وبعدها تتحطم</td></tr>
+    <tr><td>⚔ سيف التركيز</td><td>1,200</td><td>+١٠٪ XP لمهمة واحدة (بحد ١٠٠)</td></tr>
+    <tr><td>🗡 خنجر الظل</td><td>1,500</td><td>+٢٠٪ XP لأي مهمة تنجزها قبل ١٢ الضهر (دائم)</td></tr>
+    <tr><td>💍 خاتم التركيز</td><td>1,800</td><td>جلسة تركيز ٥٠ دقيقة بدون مغادرة الصفحة = DC مضاعفة (دائم)</td></tr>
+    <tr><td>♢ رمح الصياد</td><td>2,000</td><td>+٢٠٪ DC لمهمة واحدة (بحد ٢٥)</td></tr>
+  </table></div>
+  <p>الأغراض بتتفعّل من لوحة <b>المخزون والمعدات</b> تحت المتجر.</p>
+</section>
+
+<section id="attrs">
+  <h2><small>11 // STAT POINTS</small>نقاط الصياد</h2>
+  <p>كل مستوى جديد بيديك <b>٣ نقاط</b> توزعها على مساراتك، وكل مسار بيقوّي مكافآت المهمات المرتبطة بيه. البونصات بتتجمع مع المعدات وجيش الظلال.</p>
+  <p>لو غيرت رأيك، زر <code>↺ إعادة التوزيع</code> بيعيد توزيع النقاط مقابل <b>٥٠ DC</b>.</p>
+</section>
+
+<section id="growth">
+  <h2><small>12 // GROWTH &amp; MASTERY</small>تطوير الصياد وغرفة الإتقان</h2>
+  <p>الصفحتين دول للناس اللي عايزة تبني مهارة وهدف كبير، مش مجرد مهام يومية.</p>
+  <div class="grid">
+    <div class="card"><b>☠ Awakening</b><br>يتفتح عند رتبة B. اجتز ٣ مهمات حقيقية لتفعيل ثيم الملك وزيادة XP دائمة (+١٥٪).</div>
+    <div class="card"><b>🎯 Main Quest</b><br>هدفك الكبير مقسّم لمراحل، وتربط بيه مهامك اليومية.</div>
+    <div class="card"><b>🌳 Skill Tree</b><br>مسارات (برمجة، إنجليزي، عادات، مهارات مهنية). المهارة ما بتتفتحش إلا بإثبات إنك خلصت خطواتها.</div>
+    <div class="card"><b>☠ Weekly Boss</b><br>تحدي واحد كل أسبوع. تقدر تعيده الأسبوع الجاي بدون ضغط.</div>
+    <div class="card"><b>🧯 Minimum Viable Day</b><br>للأيام التقيلة: نسخة صغيرة من التقدم (عبادة قصيرة، ٥ دقايق قراءة، ترتيب) بدل ما اليوم يبقى صفر.</div>
+    <div class="card"><b>🔍 Failure Analysis</b><br>أسباب تعثراتك مجمعة، تستخدمها لتعديل النظام لا لجلد نفسك.</div>
+  </div>
+  <h3>Hunter Mastery</h3>
+  <ul>
+    <li><b>اختبار إتقان المهارة:</b> بعد مشروع عملي حقيقي سجّل درجتك من ١٠٠ ودليلك. النجاح من <b>٨٠</b> وبيديك +٥٠ XP.</li>
+    <li><b>زعيم العادة:</b> عادة واحدة وخطوات قابلة للقياس. هزيمته = +١٠٠ XP و+١٠ DC.</li>
+    <li><b>الحملة الرئيسية:</b> مراحل تعلّمها بعد الإنجاز الفعلي. إكمالها = +١٠٠ XP و+١٠ DC.</li>
+    <li><b>تقرير أسبوعي وتحليل نقاط ضعف</b> من سجلك المحلي. ده مش تشخيص، هو ملاحظات من أرقامك.</li>
+  </ul>
+</section>
+
+<section id="center">
+  <h2><small>13 // HUNTER CENTER</small>مركز الصياد</h2>
+  <p>صندوق أدوات التخطيط والاستمرارية، وكلها بتتفتح من <code>مركز الصياد ← أدوات التخطيط والاستمرارية</code>:</p>
+  <ul>
+    <li><b>أهداف قابلة للقياس:</b> بتعدّ تقدمك الأسبوعي يدويًا.</li>
+    <li><b>خطة الأسبوع:</b> لحد ٣ أولويات لكل يوم.</li>
+    <li><b>قوالب مهام جاهزة:</b> بتضيف مهمة عادية (بدون مكافأة تلقائية).</li>
+    <li><b>مراجعة الأسبوع · تقويم النشاط · بحث المهام.</b></li>
+    <li><b>وضع التركيز:</b> مؤقت مستقل لجلسات التركيز.</li>
+    <li><b>تذكير لطيف:</b> يشتغل والموقع مفتوح بس.</li>
+    <li><b>راحة مرنة (Rest Day):</b> يومين في الشهر كحد أقصى. بتحمي سلسلة الالتزام فقط، بدون XP.</li>
+    <li><b>تصدير CSV</b> ونسخة احتياطية مشفرة بكلمة سر.</li>
+  </ul>
+  <div class="callout"><b>الإشعارات والصوت</b>
+    من الإعدادات تقدر تشغّل/توقف أصوات النظام، وتفعّل إشعارات المتصفح بإذنك. الإشعارات بتشتغل طول ما الموقع مفتوح، ومفيش تذكير مجدول بعد ما تقفله.</div>
+</section>
+
+<section id="coop">
+  <h2><small>14 // CO-OP CAMPAIGNS</small>حملات الانضباط مع صديق</h2>
+  <p>تحدي مشترك بينك وبين صاحبك. محتاج <b>تسجيل دخول</b> وإعداد Firebase (وضع الضيف المحلي مش بيدعمها).</p>
+  <ol class="steps">
+    <li>من <code>حملات الانضباط</code> اكتب اسم الحملة، وخطوات التحدي (كل خطوة في سطر)، والعقوبة لو فشلتوا.</li>
+    <li>اختار المدة (يوم/أسبوع/شهر/سنة) أو مؤقت مخصص بالساعات أو الأيام.</li>
+    <li>ابعت <b>كود الدعوة</b> لصاحبك. هو يدخله في «الانضمام لصديق».</li>
+    <li>لازم الاتنين ينفذوا <b>كل الخطوات</b> في الوقت. المكافأة سرية: XP عالي وعنصر نادر مخفي.</li>
+  </ol>
+  <div class="callout warn"><b>انتبه</b>
+    لو الوقت خلص أو حد من الاتنين سجّل فشل، العقوبة بتتطبق على الطرفين. شارك الكود مع اللي تثق فيه بس. ونقاط الحملات مش نظام منافسة موثوق ضد التلاعب، فمتستخدموهاش لجوايز حقيقية.</div>
+</section>
+
+<section id="ai">
+  <h2><small>15 // SYSTEM AI</small>مساعد النظام الذكي</h2>
+  <p>صفحة <code>مساعد النظام AI</code> فيها:</p>
+  <ul>
+    <li><b>تحليل الأداء</b> من سجلك المحلي، و<b>اختبار إتقان مقترح</b>.</li>
+    <li><b>اقتراح مهام</b> تحوّل أي اقتراح لمهمة بضغطة وتعدّلها على مزاجك.</li>
+    <li><b>محادثة مع المستشار وظلال S/S+</b> بعد ما تستخرجها. ولو عايز تجرب قبلها فعّل «وضع تجربة مؤقت».</li>
+  </ul>
+  <h3>لتشغيل الذكاء الاصطناعي الحقيقي</h3>
+  <p>من <code>⚙ إعدادات الذكاء الاصطناعي</code> اختار المزود (<b>Gemini</b> أو API متوافق مع OpenAI)، وأدخل الموديل والمفتاح أو رابط الـ Worker Proxy، واضغط <code>اختبار الاتصال</code>. لو مفيش إعداد، الشات بيرد بردود محلية جاهزة، والتحليل المحلي شغال برضو.</p>
+  <div class="callout warn"><b>الخصوصية والأمان</b>
+    مفتاح API بيتحفظ على جهازك في المتصفح، فمتشاركوش مع حد. ملخص تقدمك بيتبعت للمزود فقط لما تطلب تحليل أو محادثة. إثبات المهام بالصور/الفيديو بيشتغل مع Gemini بس، والتقييم آلي وتقديري.</div>
+</section>
+
+<section id="save">
+  <h2><small>16 // SAVING &amp; BACKUP</small>الحفظ والنسخ الاحتياطي</h2>
+  <ul>
+    <li>تقدمك بيتحفظ <b>محليًا في المتصفح</b> بشكل افتراضي. لو مسحت بيانات المتصفح ممكن يضيع.</li>
+    <li><b>صدّر نسخة JSON أسبوعيًا</b> من <code>الإعدادات ← تصدير النسخة الاحتياطية</code> واحتفظ بيها خارج الجهاز، وبعدين اضغط «أكدت حفظ نسخة».</li>
+    <li>عند الاستيراد بتشوف <b>معاينة</b> (المستوى، XP، العملات، المهام) قبل ما أي بيانات تتبدّل.</li>
+    <li>المزامنة السحابية <b>يدوية</b> من مركز الصياد: الرفع بيستبدل النسخة السحابية، والاستعادة بتستبدل المحلية. خد نسخة قبل أي اتجاه.</li>
+    <li>النسخة المشفرة محتاجة كلمة سرها للاستعادة، فاحفظها بعيد. أما CSV فمش مشفر.</li>
+    <li>لو النظام اكتشف تخزين تالف، بيحميه من الكتابة فوقه ويعرض عليك تنزيل «نسخة إنقاذ».</li>
+  </ul>
+  <p class="muted">التطبيق بيشتغل أوفلاين بعد أول فتح عبر HTTPS، لكن تسجيل الدخول والـ AI والمزامنة محتاجين إنترنت.</p>
+</section>
+
+<section id="tips">
+  <h2><small>17 // TIPS &amp; FAQ</small>نصايح وأسئلة شائعة</h2>
+  <h3>نصايح للاستمرار</h3>
+  <ul>
+    <li>اعمل المهمة سهلة لدرجة إنك تحس إنها مضحكة، وكبّرها مع الوقت.</li>
+    <li>الاستمرار أهم من الكمال. يوم ضعيف أحسن من يوم صفر، وده سبب وجود Minimum Viable Day.</li>
+    <li>سجّل أسباب الفشل بصدق وعدّل نظامك بناءً عليها.</li>
+    <li>الراحة جزء من النظام. لا تعوّض النوم، ولا تضاعف التمرين كعقاب.</li>
+  </ul>
+  <h3>أسئلة شائعة</h3>
+  <details><summary>مش قادر آخد XP من المهمة، ليه؟</summary>
+    غالبًا عندك <b>عقوبة مستحقة</b>. روح صفحة العقوبات ونفّذها. أو المهمة مرتبطة بجلسة تركيز لسه ما اكتملتش.</details>
+  <details><summary>المتجر مقفول؟</summary>
+    بيتفتح عند <b>رتبة A</b> (١٠,٠٠٠ XP).</details>
+  <details><summary>ينفع أمسح مهمة؟</summary>
+    أيوه، إلا لو Strict Mode مفعّل وعدّت ١٠ دقايق على إنشائها.</details>
+  <details><summary>ضاعت بياناتي بعد ما غيرت الجهاز أو المتصفح</summary>
+    التقدم محلي لكل متصفح. استعد من نسخة JSON احتياطية، أو من مزامنة سحابية لو كنت رفعت نسخة قبل كده.</details>
+  <details><summary>تسجيل الدخول بـ Google مش بيشتغل</summary>
+    افتح الموقع عبر رابط HTTPS (مش من ملف على الجهاز file://)، ولازم النطاق يكون مضاف في Authorized domains في Firebase.</details>
+  <details><summary>الذكاء الاصطناعي بيدّي خطأ أو 404</summary>
+    اضغط «اختبار الاتصال» وراجع الموديل والمفتاح. لو بتستخدم Worker، اتأكد إنه منشور بآخر نسخة.</details>
+  <details><summary>الأرقام والـ XP اتحسبت غلط؟</summary>
+    الـ XP ممكن يتعدّل بمكافآت (معدات، إكسير، ألقاب، Awakening، ظلال). التفاصيل في سجل المعاملات بالإعدادات.</details>
+</section>
+
+</main>
+<footer>SYSTEM V10.3 • YOUR REAL LIFE IS THE MAIN QUEST.</footer>
+</div>
+</body>
+</html>

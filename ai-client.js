@@ -15,8 +15,8 @@
   const MODELS=["gemini-3.5-flash-lite","gemini-3.8-flash"];
   const lsGet=k=>{try{return(localStorage.getItem(k)||"").trim();}catch(e){return"";}};
   const lsSet=(k,v)=>{try{v=(v||"").trim();v?localStorage.setItem(k,v):localStorage.removeItem(k);}catch(e){}};
-  const getUrl=()=>{const v=lsGet(K.url);return v==="off"?"":(v||DEFAULT_URL).replace(/\/+$/,"");};
-  const setUrl=v=>{v=(v||"").trim();lsSet(K.url,v||"off");};
+  const getUrl=()=>{let v=lsGet(K.url);if(v==="off")v="";let u=String(v||DEFAULT_URL).trim().replace(/\/+$/,"");if(u&&!/^https?:\/\//i.test(u))u="https://"+u;return u;};
+  const setUrl=v=>{v=(v||"").trim();if(v)lsSet(K.url,v);else{try{localStorage.removeItem(K.url);}catch(e){}}};
   const getUserKey=()=>lsGet(K.key);
   // No API keys are shipped with the app. Direct mode is an explicit personal-device choice.
   const getKey=getUserKey,setKey=v=>lsSet(K.key,v);

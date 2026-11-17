@@ -163,6 +163,7 @@
   <script src="ai-client.js"></script>
   <script src="script.js"></script>
   <script src="features.js"></script>
+  <script src="help.js"></script>
   <script>(function(){["googleSignInButton","googleGateSignIn"].forEach(function(id){var b=document.getElementById(id);if(!b)return;b.addEventListener("click",function(){if(window.__soloCloudLoaded)return;var m=location.protocol==="file:"?"الصفحة مفتوحة من file:// فالمتصفح بيمنع تحميل ملف تسجيل الدخول. شغّل الموقع عبر localhost (python -m http.server 8000) أو ارفعه على HTTPS.":"لسه ملف تسجيل الدخول ما اتحمّلش. استنى ثانية وجرّب تاني، ولو فضل كده افتح Console (F12) وابعتلي الخطأ.";var el=document.getElementById("authGateStatus")||document.getElementById("firebaseSetupStatus");if(el)el.textContent=m;else alert(m);});});})();</script>
 <script type="module" src="cloud-auth.js"></script>
 <script>(function(){
